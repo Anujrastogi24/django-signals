@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        /* Form Styles */
+        form {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #3e8e41;
+        }
+
+        /* Error Message Styles */
+        .alert {
+            padding: 10px;
+            background-color: #f2dede;
+            border: 1px solid #a94442;
+            color: #a94442;
+            margin-bottom: 10px;
+        }
+
+        /* Product List Styles */
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Manage Products</h1>
+
+        <!-- Display any error messages -->
+        {% if error %}
+            <div class="alert alert-danger">
+                <strong>Error:</strong> {{ error }}
+            </div>
+        {% endif %}
+
+        <!-- Add Product Form -->
+        <form method="post" action="{% url 'create_product' %}">
+            {% csrf_token %}
+            <h2>Add Product</h2>
+            <div class="form-group">
+                <label for="name">Product Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Product Price:</label>
+                <input type="number" id="price" name="price" step="0.0005" required>
+            </div>
+            <input type="hidden" name="action" value="add">
+            <button type="submit">Add Product</button>
+        </form>
+
+        <!-- Delete Product Form -->
+        <form method="post" action="{% url 'create_product' %}">
+            {% csrf_token %}
+            <h2>Delete Product</h2>
+            <div class="form-group">
+                <label for="product_id">Select Product to Delete:</label>
+                <select id="product_id" name="product_id" required>
+                    {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="hidden" name="action" value="delete">
+            <button type="submit">Delete Product</button>
+        </form>
+
+        <!-- List of Existing Products -->
+        <h2>Existing Products</h2>
+        <ul>
+            {% for product in products %}
+                <li>{{ product.name }} - ${{ product.price }}</li>
+            {% empty %}
+                <li>No products available.</li>
+            {% endfor %}
+        </ul>
+
+    </div>
+</body>
+</html>
